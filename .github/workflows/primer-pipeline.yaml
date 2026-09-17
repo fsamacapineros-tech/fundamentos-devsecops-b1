@@ -40,7 +40,7 @@ jobs:
         shell: bash
         run: |
           # Comprobar el contendio con el valor esperado
-          if["$(cat configuracion.txt)" = "DEBUG=false"]; them
+          if[ "$(cat configuracion.txt)" = "DEBUG=false" ]; then
             # Registrar que la regla se cumplio
             echo "Control Aprobado"
           else
@@ -54,7 +54,7 @@ jobs:
   entrega_simulada:
         # Depender del exito del primer trabajo
         needs: validar
-        runs-on: ubunto-latest
+        runs-on: ubuntu-latest
 
         steps:
         # Mostrar que se permitio continuar
