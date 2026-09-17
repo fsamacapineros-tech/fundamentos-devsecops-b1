@@ -1,64 +1,70 @@
-# Nombre visible en Actions
+# Nombre visible en Actions.
 name: Fundamentos DevSecOps - Bloque 1
 
-# Eventos que inician la automatización
-on: 
-  # Ejecutar cuando se envía un cambio al repositorio
-  push: 
-  # Permite también una ejecución manual
+# Eventos que inician la automatización.
+on:
+  # Ejecutar cuando se envía un cambio al repositorio.
+  push:
+  # Permitir también una ejecución manual.
   workflow_dispatch:
-# El token automatico solonecesita lectura
+
+# El token automático solo necesita lectura.
 permissions:
   contents: read
 
-# Trabajos que forma el pipeline
+# Trabajos que forman el pipeline.
 jobs:
-  # Primer trabajo: revisar la configuracion
+  # Primer trabajo: revisar la configuración.
   validar:
-    # Maquina donde de se ejecutarán los pasos
+    # Máquina donde se ejecutarán los pasos.
     runs-on: ubuntu-latest
-    # Limite duracion de trabajo
+
+    # Límite de duración del trabajo.
     timeout-minutes: 5
-    # Pasos que se van a ejecutar en orden
+
+    # Pasos que se ejecutan en orden.
     steps:
-        # Obtener los archivos del repositorio
+      # Obtener los archivos del repositorio.
       - name: Obtener archivos del repositorio
         uses: actions/checkout@v6
         with:
-          # No conservar credenciales para comandos posteriores
-          persist-credencials: false
-        # Verificamos la existencia de archivos
-      - name: Verificar existencia de archivos
-        run: test -f configuracion.txta
+          # No conservar credenciales para comandos posteriores.
+          persist-credentials: false
 
-        # Mostrar el dato ficticio que vamos revisar
+      # Verificar que exista el archivo de entrada.
+      - name: Verificar existencia del archivo
+        run: test -f configuracion.txt
+
+      # Mostrar el dato ficticio que vamos a revisar.
       - name: Mostrar configuracion de ejemplo
         run: cat configuracion.txt
 
-      # Aplicar la regla acordada
+      # Aplicar la regla acordada.
       - name: Comprobar regla de configuracion
         shell: bash
         run: |
-          # Comprobar el contendio con el valor esperado
-          if[ "$(cat configuracion.txt)" = "DEBUG=false" ]; then
-            # Registrar que la regla se cumplio
-            echo "Control Aprobado"
+          # Comparar el contenido con el valor esperado.
+          if [ "$(cat configuracion.txt)" = "DEBUG=false" ]; then
+            # Registrar que la regla se cumplió.
+            echo "CONTROL APROBADO"
           else
-            # Informar el motivo rechazado
-            echo "CONTROL RECHAZADO": se esperaba DEBUG=false
-            # Terminar conun código de error
+            # Informar el motivo del rechazo.
+            echo "CONTROL RECHAZADO: se esperaba DEBUG=false"
+
+            # Terminar con un código de error.
             exit 1
           fi
 
-    # Segundo trabajo: representar unaetpa posterior
+  # Segundo trabajo: representar una etapa posterior.
   entrega_simulada:
-        # Depender del exito del primer trabajo
-        needs: validar
-        runs-on: ubuntu-latest
+    # Depender del éxito del primer trabajo.
+    needs: validar
 
-        steps:
-        # Mostrar que se permitio continuar
-        - name: Representar la siguiente etapa
-          run: echo "Entrega simulada autorizada"
+    # Este trabajo utiliza su propio runner.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
 
-          
+    steps:
+      # Mostrar que se permitió continuar.
+      - name: Representar la siguiente etapa
+        run: echo "ENTREGA SIMULADA AUTORIZADA"
